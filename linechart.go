@@ -245,13 +245,9 @@ func (lc *LineChart) calcLayout() {
 
 	span := lc.maxY - lc.minY
 
-	if lc.minY < lc.bottomValue {
-		lc.bottomValue = lc.minY - 0.2*span
-	}
-
-	if lc.maxY > lc.topValue {
-		lc.topValue = lc.maxY + 0.2*span
-	}
+	// Recalculate scale
+	lc.bottomValue = lc.minY - 0.2*span
+	lc.topValue = lc.maxY + 0.2*span
 
 	lc.axisYHeight = lc.innerArea.Dy() - 2
 	lc.calcLabelY()
@@ -309,6 +305,19 @@ func (lc *LineChart) plotAxes() Buffer {
 	}
 
 	return buf
+}
+
+// GetCapacity returns the curreny maximum length of lc.Data
+// When streaming data you need to know how large of a window you have.
+func (lc *LineChart) GetCapacity() (c int) {
+	c = (termWidth - lc.labelYSpace - lc.Block.PaddingLeft - lc.Block.PaddingRight - 3)
+	if lc.Mode == "braille" {
+		c = c * 2
+	}
+	if c < 1 {
+		c = 0
+	}
+	return
 }
 
 // Buffer implements Bufferer interface.
