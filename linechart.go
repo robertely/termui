@@ -180,7 +180,9 @@ func (lc *LineChart) calcLabelX() {
 	}
 }
 
-func shortenFloatVal(x float64) string {
+// ShortenFloatVal should have been public
+// This is only used for rendering the y axis, but gwatch will need it.
+func ShortenFloatVal(x float64) string {
 	s := fmt.Sprintf("%.2f", x)
 	if len(s)-3 > 3 {
 		s = fmt.Sprintf("%.2e", x)
@@ -200,7 +202,7 @@ func (lc *LineChart) calcLabelY() {
 	lc.labelY = make([][]rune, n)
 	maxLen := 0
 	for i := 0; i < n; i++ {
-		s := str2runes(shortenFloatVal(lc.bottomValue + float64(i)*span/float64(n)))
+		s := str2runes(ShortenFloatVal(lc.bottomValue + float64(i)*span/float64(n)))
 		if len(s) > maxLen {
 			maxLen = len(s)
 		}
